@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+target/
+dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# env（不要提交真实密钥）
+.env
+
+# logs
+*.log
+logs/
+
+# build cache
+frontend/.vite/

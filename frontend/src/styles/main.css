@@ -1,0 +1,138 @@
+:root {
+  --lingxi-primary: #4f6ef2;
+  --lingxi-bg: #f5f7fb;
+  --lingxi-dark: #1f2937;
+  --lingxi-card: #ffffff;
+}
+
+html.dark {
+  --lingxi-bg: #0d1117;
+  --lingxi-card: #161b22;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  background: var(--lingxi-bg);
+  color: #303133;
+}
+
+.page-card {
+  background: var(--lingxi-card);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 1px 4px rgba(31, 41, 55, 0.06);
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 聊天 Markdown 样式 */
+.msg-md { line-height: 1.7; word-break: break-word; font-size: 14px; }
+.msg-md h1, .msg-md h2, .msg-md h3, .msg-md h4 { margin: 12px 0 8px; }
+.msg-md p { margin: 6px 0; }
+.msg-md pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 13px;
+}
+.msg-md code {
+  background: #eef1f8;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: Consolas, Monaco, monospace;
+}
+.msg-md pre code { background: transparent; padding: 0; color: inherit; }
+.msg-md table { border-collapse: collapse; margin: 8px 0; width: 100%; font-size: 13px; }
+.msg-md th, .msg-md td { border: 1px solid #e4e7ed; padding: 6px 10px; text-align: left; }
+.msg-md th { background: #f5f7fb; }
+.msg-md blockquote {
+  border-left: 3px solid var(--lingxi-primary);
+  margin: 8px 0;
+  padding: 4px 12px;
+  background: #f7f9ff;
+  color: #555;
+}
+.msg-md ul, .msg-md ol { padding-left: 22px; margin: 6px 0; }
+
+/* 工具调用卡片 */
+.tool-card {
+  border: 1px solid #dfe4f1;
+  border-left: 3px solid var(--lingxi-primary);
+  background: #fafbff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 6px 0;
+  font-size: 13px;
+}
+.tool-card .tool-name { font-weight: 600; color: #3b5bdb; }
+.tool-card pre {
+  background: #f1f3f9;
+  padding: 6px 8px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 12px;
+  max-height: 180px;
+}
+
+.chat-bubble-user {
+  background: linear-gradient(135deg, #4f6ef2, #6a8bff);
+  color: #fff;
+  border-radius: 12px 12px 2px 12px;
+  padding: 10px 14px;
+  max-width: 78%;
+  display: inline-block;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.chat-bubble-ai {
+  background: #fff;
+  border: 1px solid #e8ecf5;
+  border-radius: 12px 12px 12px 2px;
+  padding: 10px 14px;
+  max-width: 92%;
+  display: inline-block;
+  width: fit-content;
+}
+
+/* ===== 暗色模式适配 ===== */
+html.dark,
+html.dark body,
+html.dark #app {
+  background: var(--lingxi-bg);
+  color: var(--el-text-color-primary, #e6e8eb);
+}
+html.dark .layout,
+html.dark .main,
+html.dark .el-container { background: var(--lingxi-bg); }
+html.dark .header {
+  background: var(--el-bg-color, #141414);
+  border-bottom-color: var(--el-border-color, #414243);
+}
+html.dark .page-card {
+  background: var(--lingxi-card);
+  color: var(--el-text-color-primary, #e6e8eb);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+html.dark .chat-bubble-ai { background: #1c2128; border-color: #2d333b; }
+html.dark .msg-md code { background: #2d333b; }
+html.dark .msg-md th { background: #21262d; }
+html.dark .msg-md th,
+html.dark .msg-md td { border-color: #30363d; }
+html.dark .tool-card { background: #1a2130; border-color: #2d3a55; }
+html.dark .tool-card pre { background: #10151d; }
+html.dark .tool-card .tool-name { color: #8ea4ff; }
+html.dark .msg-md blockquote { background: #1a2130; color: #aab; }
+html.dark .session-item:hover, html.dark .session-item.active { background: #1c2740; }
