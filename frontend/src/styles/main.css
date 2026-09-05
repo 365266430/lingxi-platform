@@ -136,3 +136,48 @@ html.dark .tool-card pre { background: #10151d; }
 html.dark .tool-card .tool-name { color: #8ea4ff; }
 html.dark .msg-md blockquote { background: #1a2130; color: #aab; }
 html.dark .session-item:hover, html.dark .session-item.active { background: #1c2740; }
+
+/* Liquid Glass: navigation floats above calm, readable content surfaces. */
+:root {
+  --lingxi-primary:#3566cd;
+  --lingxi-bg:#edf2f8;
+  --lingxi-dark:#24344a;
+  --lingxi-card:rgba(255,255,255,.82);
+  --lingxi-muted:#60718a;
+  --lingxi-glass:rgba(255,255,255,.56);
+  --lingxi-edge:rgba(255,255,255,.85);
+  --lingxi-line:rgba(97,124,163,.14);
+  --lingxi-hover:rgba(255,255,255,.4);
+  --lingxi-selected:rgba(255,255,255,.85);
+  --lingxi-shadow:0 12px 40px rgba(57,81,123,.055),inset 0 1px 0 rgba(255,255,255,.8);
+  --el-color-primary:#3566cd;
+  --el-border-radius-base:12px;
+}
+html.dark {
+  --lingxi-primary:#a1bdff;
+  --lingxi-bg:#111b2a;
+  --lingxi-dark:#e3ebf8;
+  --lingxi-card:rgba(27,42,63,.92);
+  --lingxi-muted:#afbdd1;
+  --lingxi-glass:rgba(28,44,65,.76);
+  --lingxi-edge:rgba(175,198,231,.16);
+  --lingxi-line:rgba(158,185,224,.18);
+  --lingxi-hover:rgba(116,151,199,.12);
+  --lingxi-selected:rgba(106,142,197,.24);
+  --lingxi-shadow:0 12px 40px #0002,inset 0 1px 0 #ffffff0a;
+}
+html,body,#app,html.dark,html.dark body,html.dark #app { color:var(--lingxi-dark); background:var(--lingxi-bg); }
+body { font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif; -webkit-font-smoothing:antialiased; }
+#app,html.dark #app {
+  background:radial-gradient(ellipse at 12% 5%,#b8d7f04d,transparent 45%),radial-gradient(ellipse at 90% 15%,#d7c8ed45,transparent 40%),radial-gradient(ellipse at 70% 95%,#b3ded74a,transparent 45%),var(--lingxi-bg);
+}
+.glass-panel { background:var(--lingxi-glass); border:1px solid var(--lingxi-edge); box-shadow:var(--lingxi-shadow); backdrop-filter:blur(24px) saturate(145%); -webkit-backdrop-filter:blur(24px) saturate(145%); }
+.page-card,html.dark .page-card { background:var(--lingxi-card); border:1px solid var(--lingxi-edge); border-radius:22px; padding:22px; box-shadow:var(--lingxi-shadow); }
+html.dark .layout,html.dark .main,html.dark .header { background:transparent; }
+:where(a,button,[tabindex]):focus-visible { outline:3px solid var(--lingxi-primary); outline-offset:4px; }
+.el-button { border-radius:12px; }
+.el-button--primary { --el-button-bg-color:#3566cd; --el-button-border-color:#3566cd; --el-button-text-color:#fff; }
+@supports not (backdrop-filter:blur(1px)) { .glass-panel { background:var(--lingxi-card); } }
+@media(prefers-reduced-transparency:reduce) { .glass-panel { background:var(--lingxi-bg); backdrop-filter:none; -webkit-backdrop-filter:none; } }
+@media(prefers-contrast:more) { :root { --lingxi-muted:#344862; --lingxi-glass:#f3f6fb; --lingxi-card:#fff; } html.dark { --lingxi-muted:#d2e0f5; --lingxi-glass:#162337; --lingxi-card:#1b2b40; } .glass-panel { backdrop-filter:none; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
