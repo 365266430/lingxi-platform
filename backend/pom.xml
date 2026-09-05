@@ -22,7 +22,7 @@
         <spring-ai.version>1.0.0</spring-ai.version>
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <jjwt.version>0.12.6</jjwt.version>
-        <springdoc.version>2.6.0</springdoc.version>
+        <springdoc.version>2.8.17</springdoc.version>
         <minio.version>8.5.12</minio.version>
     </properties>
 
