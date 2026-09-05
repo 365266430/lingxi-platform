@@ -78,24 +78,29 @@ public class AgentOrchestrator {
 
     /** 提交流式推理任务并立即返回 SSE 通道。 */
     public SseEmitter startStream(ChatSession session, AgentType agentType) {
+        return startStream(session, agentType.code());
+    }
+
+    public SseEmitter startStream(ChatSession session, String agentCode) {
         SseEmitter emitter = new SseEmitter(SSE_TIMEOUT_MS);
         emitter.onTimeout(emitter::complete);
-        executor.execute(() -> run(session, agentType, emitter));
+        executor.execute(() -> run(session, agentCode, emitter));
         return emitter;
     }
 
-    private void run(ChatSession session, AgentType agentType, SseEmitter emitter) {
+    private void run(ChatSession session, String agentCode, SseEmitter emitter) {
         long startedAt = System.currentTimeMillis();
         String messageId = String.valueOf(session.getId()) + "-" + startedAt;
         try {
-            send(emitter, "start", Map.of("agent", agentType.code(), "agentName", agentType.getDisplayName()),
+            AgentDefinition definition = registry.definition(agentCode);
+            send(emitter, "start", Map.of("agent", agentCode, "agentName", definition.getName()),
                     session.getId(), messageId, 0);
 
             List<Message> instructions = new ArrayList<>();
-            instructions.add(new SystemMessage(registry.systemPrompt(agentType)));
+            instructions.add(new SystemMessage(definition.getSystemPrompt()));
             instructions.addAll(memory.buildWindow(session.getId()));
 
-            List<ToolCallback> callbacks = toolSet.forAgent(agentType);
+            List<ToolCallback> callbacks = toolSet.forAgent(agentCode);
             ToolCallingChatOptions options = ToolCallingChatOptions.builder()
                     .toolCallbacks(callbacks)
                     .internalToolExecutionEnabled(false)
@@ -161,7 +166,7 @@ public class AgentOrchestrator {
             send(emitter, "done", Map.of("answer", finalAnswer, "rounds", round + 1, "costMs", costMs),
                     session.getId(), messageId, round + 1);
             log.info("Agent 完成 sessionId={} agent={} rounds={} cost={}ms",
-                    session.getId(), agentType.code(), round + 1, costMs);
+                    session.getId(), agentCode, round + 1, costMs);
         } catch (ClientGoneException e) {
             log.info("客户端断开，终止推理 sessionId={}", session.getId());
         } catch (BizException e) {

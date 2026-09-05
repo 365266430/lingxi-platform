@@ -7,6 +7,6 @@ public class SessionCreateReq {
 
     private String title;
 
-    /** supervisor | knowledge_qa | ops_diagnosis | data_analysis | report */
+    /** Agent 编码；缺省使用 supervisor */
     private String agentType = "supervisor";
 }

@@ -3,6 +3,7 @@ package com.lingxi.modules.chat;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lingxi.agent.core.AgentType;
+import com.lingxi.agent.core.AgentDefinitionService;
 import com.lingxi.agent.core.ConversationPersistence;
 import com.lingxi.common.exception.BizException;
 import com.lingxi.security.SecurityUtils;
@@ -23,13 +24,14 @@ public class ChatService {
     private final ChatSessionMapper sessionMapper;
     private final ChatMessageMapper messageMapper;
     private final ConversationPersistence persistence;
+    private final AgentDefinitionService agentDefinitionService;
 
     public ChatSession createSession(Long userId, SessionCreateReq req) {
-        AgentType type = AgentType.fromCode(req.getAgentType());
+        String agentCode = agentDefinitionService.requireRunnable(req.getAgentType());
         ChatSession session = new ChatSession();
         session.setUserId(userId);
         session.setTitle(req.getTitle() == null || req.getTitle().isBlank() ? "新对话" : req.getTitle());
-        session.setAgentType(type.code());
+        session.setAgentType(agentCode);
         session.setMessageCount(0);
         sessionMapper.insert(session);
         return session;

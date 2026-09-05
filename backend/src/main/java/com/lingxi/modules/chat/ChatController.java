@@ -1,6 +1,6 @@
 package com.lingxi.modules.chat;
 
-import com.lingxi.agent.core.AgentType;
+import com.lingxi.agent.core.AgentDefinitionService;
 import com.lingxi.agent.core.AgentOrchestrator;
 import com.lingxi.common.api.PageResult;
 import com.lingxi.common.api.Result;
@@ -38,6 +38,7 @@ public class ChatController {
 
     private final ChatService chatService;
     private final AgentOrchestrator orchestrator;
+    private final AgentDefinitionService agentDefinitionService;
 
     @Operation(summary = "创建会话")
     @PostMapping("/sessions")
@@ -101,9 +102,7 @@ public class ChatController {
             session = chatService.getOwned(principal.userId(), sessionId);
         }
         chatService.saveUserMessage(session, req.getContent());
-        AgentType resolvedAgent = agentType != null && !agentType.isBlank()
-                ? AgentType.fromCode(agentType)
-                : AgentType.fromCode(session.getAgentType());
+        String resolvedAgent = agentDefinitionService.requireRunnable(agentType != null && !agentType.isBlank() ? agentType : session.getAgentType());
         return orchestrator.startStream(session, resolvedAgent);
     }
 

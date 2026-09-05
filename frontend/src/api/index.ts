@@ -64,3 +64,10 @@ export const adminUpdateUserRole = (id: string | number, role: string) =>
 export const getModelConfig = () => http.get('/admin/model-config')
 export const saveModelConfig = (config: any) => http.put('/admin/model-config', config)
 export const testModelConfig = () => http.post('/admin/model-config/test')
+
+/* ============ Agent 管理 ============ */
+export const adminAgents = () => http.get('/admin/agents')
+export const adminCreateAgent = (agent: any) => http.post('/admin/agents', agent)
+export const adminUpdateAgent = (id: string | number, agent: any) => http.put('/admin/agents/' + id, agent)
+export const adminUpdateAgentStatus = (id: string | number, enabled: number) => http.put('/admin/agents/' + id + '/status', { enabled })
+export const adminDeleteAgent = (id: string | number) => http.delete('/admin/agents/' + id)

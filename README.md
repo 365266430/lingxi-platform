@@ -46,6 +46,32 @@ docker compose logs -f backend
 
 **演示账号**：`admin / admin123`（管理员）、`opsuser / user123`（普通用户）
 
+
+### 从 IDEA / 本机启动后端
+
+本机运行默认连接 `localhost:3306/lingxi`。Compose 中的 MySQL 仅在容器网络暴露 `3306`，所以容器里的 `lingxi` 不等于本机 MySQL 的同名库，数据也不共享。
+
+1. 在本机 MySQL 执行 [scripts/init-local-db.sql](scripts/init-local-db.sql)，先创建 `lingxi` 数据库。Flyway 在后端启动时自动创建表；`Unknown database 'lingxi'` 表示数据库本身缺失，不能通过关闭 Flyway 解决。
+2. 确保 Redis、RabbitMQ、Qdrant 和 MinIO 可访问。后端默认 RabbitMQ、MinIO 凭据已与本项目 Compose 一致；使用默认值时无需额外配置。自定义过凭据时，在 IDEA 运行配置中覆盖相应环境变量：
+
+   ```text
+   MYSQL_HOST=localhost
+   MYSQL_PORT=3306
+   MYSQL_DATABASE=lingxi
+   MYSQL_USERNAME=root
+   MYSQL_PASSWORD=<本机 MySQL 密码>
+   RABBITMQ_USERNAME=lingxi
+   RABBITMQ_PASSWORD=lingxi123
+   MINIO_ACCESS_KEY=minioadmin
+   MINIO_SECRET_KEY=minioadmin123
+   ```
+
+   IDEA 直接启动不会自动加载项目根目录的 `.env` 文件；需要覆盖的变量应放在运行配置的 Environment variables 中。本机 MySQL 默认密码为 `root`，其他密码请显式设置。
+3. 使用 JDK 21 运行 `com.lingxi.LingXiApplication`。若 Docker 后端已占用 `8080`，先执行 `docker compose stop backend`，再启动 IDEA 后端。不要同时运行连接不同数据库、却消费同一文档队列的两个后端。
+4. 本地开发前端使用 `cd frontend` 后执行 `npm run dev`，默认代理到本机 `8080`。容器前端代理的是容器后端，不能直接替代本地开发前端。
+
+成功日志应包含 Flyway 迁移完成（首次启动为 V1~V5）及 `Started LingXiApplication`。本机新库是独立的空库，默认种子器会初始化本机演示账号和演示数据。
+
 ### 接入真实大模型（可选）
 
 编辑 `.env` 后重启 backend 即可（或直接在网页「系统管理 → 模型配置」热更新）：
@@ -119,3 +145,15 @@ cd frontend && npm test
 - 替换 `JWT_SECRET` 为强随机值；修改数据库/MinIO/RabbitMQ 默认密码。
 - `LINGXI` 默认开启演示数据种子，生产设 `SEED_ENABLED=false`。
 - SQL 工具、联网搜索等工具请按企业安全策略评审后再开放。
+
+### 本地启动回归检查
+
+后端启动且演示数据初始化完成后，在项目根目录执行（Node.js 22+）：
+
+```bash
+node scripts/local_smoke.mjs
+```
+
+覆盖健康状态、OpenAPI/Swagger、认证、仪表盘、MinIO 上传下载、RabbitMQ 文档摄取、Qdrant 检索、重新解析和 SSE 工具调用。测试仅面向本机开发环境，会创建并清理临时文档和会话，不修改现有告警或个人资料。可用 `BASE_URL`、`SMOKE_USERNAME`、`SMOKE_PASSWORD` 覆盖地址和演示账号。
+
+API 文档使用 springdoc 2.8.x，与 Spring Boot 3.5 的[官方兼容表](https://springdoc.org/v2/faq.html)一致；旧版 2.6.0 会触发 `ControllerAdviceBean` 构造方法缺失错误。
